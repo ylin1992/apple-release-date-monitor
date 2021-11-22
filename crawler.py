@@ -7,11 +7,11 @@ from emails import Email, SendGridEmail, SSLEmail
 
 
 START_TIME          = time.time()
-FEEDS_DURATION      = 0.5 # hours
+FEEDS_DURATION      = 0.2 # hours
 CRAWL_URL           = "https://www.apple.com/tw/macbook-pro/"
 TARGET_CLASS_NAME   = 'typography-body'
 MONITORED_TEXT      = '推出日期，敬請期待。'
-
+is_checked          = False
 def feeds_timer():
     global START_TIME
     end_time = time.time()
@@ -49,6 +49,7 @@ def init_driver():
 
 @check_feeds
 def crwaler_helper(is_time_up, driver, i=0, send_email=False, email=None):
+    global is_checked
     driver.get(CRAWL_URL)
     try:
         es = driver.find_element_by_class_name(TARGET_CLASS_NAME)
@@ -63,14 +64,15 @@ def crwaler_helper(is_time_up, driver, i=0, send_email=False, email=None):
                 email.set_email(subject="Feeds on %s"%(str(datetime.datetime.now())), content='Status: %s'%es.text)
                 email.send_email()
                 #sg_email.send_feed(datetime.datetime.now(), es.text)
-            if es.text != MONITORED_TEXT and send_email:
+            if not is_checked and es.text != MONITORED_TEXT and send_email :
+                is_checked = True
                 email.set_email(subject="Status has been updated!", content='Status: %s'%es.text)
                 email.send_email()
                 #sg_email.send_email(es.text)
     except Exception as e:
         print(e)
 
-def crawl(driver, duration=5):
+def crawl(driver, duration=60):
     i = 0
     email = SendGridEmail(sender=SENDER_EMAIL, receiver=RECEIVER_EMAIL, subject="", content="")
     while(True):

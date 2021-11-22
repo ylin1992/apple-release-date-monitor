@@ -1,4 +1,4 @@
 import crawler
 
 driver = crawler.init_driver()
-crawler.crawl(driver=driver, duration=5)
+crawler.crawl(driver=driver, duration=60)
