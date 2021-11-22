@@ -1,6 +1,7 @@
 from selenium import webdriver
 import time
 import send_email
+import sg_email
 import os
 def print_info(t, text):
     print('[FETCH: %d]: %s' %(t, text))
@@ -31,6 +32,6 @@ def crawl(driver, duration=5, iter_time=10):
     except:
         print_info(i + 1, es.text)
         if es.text == '推出日期，敬請期待。':
-            send_email.send_email()
+            sg_email.send_email()
     time.sleep(duration)
     driver.close()  
