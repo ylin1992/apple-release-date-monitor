@@ -3,6 +3,7 @@ secret.sh
 **/__pycache__/
 chromedriver
 env/
+/env/
 **/env/
 /test/
 **/test/
