@@ -7,7 +7,7 @@ from emails import Email, SendGridEmail, SSLEmail
 
 
 START_TIME          = time.time()
-FEEDS_DURATION      = 0.2 # hours
+FEEDS_DURATION      = 2 # hours
 CRAWL_URL           = "https://www.apple.com/tw/macbook-pro/"
 TARGET_CLASS_NAME   = 'typography-body'
 MONITORED_TEXT      = '推出日期，敬請期待。'
