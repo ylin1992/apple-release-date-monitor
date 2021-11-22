@@ -1,14 +1,13 @@
 from selenium import webdriver
 import time
 from config import RECEIVER_EMAIL, SENDER_EMAIL
-import sg_email
 import os
 import datetime
 from emails import Email, SendGridEmail, SSLEmail
 
 
 START_TIME          = time.time()
-FEEDS_DURATION      = 50 # hours
+FEEDS_DURATION      = 0.5 # hours
 CRAWL_URL           = "https://www.apple.com/tw/macbook-pro/"
 TARGET_CLASS_NAME   = 'typography-body'
 MONITORED_TEXT      = '推出日期，敬請期待。'
@@ -16,7 +15,7 @@ MONITORED_TEXT      = '推出日期，敬請期待。'
 def feeds_timer():
     global START_TIME
     end_time = time.time()
-    elasped = (end_time - START_TIME) #/ 1000 / 60 / 60
+    elasped = (end_time - START_TIME) / 1000 / 60 / 60
     if elasped > FEEDS_DURATION:
         START_TIME = time.time()
         return True
@@ -64,7 +63,7 @@ def crwaler_helper(is_time_up, driver, i=0, send_email=False, email=None):
                 email.set_email(subject="Feeds on %s"%(str(datetime.datetime.now())), content='Status: %s'%es.text)
                 email.send_email()
                 #sg_email.send_feed(datetime.datetime.now(), es.text)
-            if i == 1 and es.text == MONITORED_TEXT and send_email:
+            if es.text != MONITORED_TEXT and send_email:
                 email.set_email(subject="Status has been updated!", content='Status: %s'%es.text)
                 email.send_email()
                 #sg_email.send_email(es.text)
