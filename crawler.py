@@ -1,10 +1,37 @@
 from selenium import webdriver
 import time
-import send_email
+from config import RECEIVER_EMAIL, SENDER_EMAIL
 import sg_email
 import os
+import datetime
+from emails import Email, SendGridEmail, SSLEmail
+
+
+START_TIME          = time.time()
+FEEDS_DURATION      = 50 # hours
+CRAWL_URL           = "https://www.apple.com/tw/macbook-pro/"
+TARGET_CLASS_NAME   = 'typography-body'
+MONITORED_TEXT      = '推出日期，敬請期待。'
+
+def feeds_timer():
+    global START_TIME
+    end_time = time.time()
+    elasped = (end_time - START_TIME) #/ 1000 / 60 / 60
+    if elasped > FEEDS_DURATION:
+        START_TIME = time.time()
+        return True
+    else:
+        return False
+
+def check_feeds(f):
+    def wrapper(*args, **kwargs):
+        is_time_up = feeds_timer()
+        f(is_time_up, *args, **kwargs)
+        return is_time_up
+    return wrapper
+
 def print_info(t, text):
-    print('[FETCH: %d]: %s' %(t, text))
+    print('[FETCH %d]: %s' %(t, text))
     
 def init_driver():
     try:
@@ -21,23 +48,35 @@ def init_driver():
 
     return driver
 
-def crawl(driver, duration=5, iter_time=10):
-    i = 0
-    while(True):
-    # for i in range(iter_time):
-        driver.get("https://www.apple.com/tw/macbook-pro/")
+@check_feeds
+def crwaler_helper(is_time_up, driver, i=0, send_email=False, email=None):
+    driver.get(CRAWL_URL)
+    try:
+        es = driver.find_element_by_class_name(TARGET_CLASS_NAME)
         try:
-            es = driver.find_element_by_class_name('typography-body')
-            try:
-                iterator = iter(es)
-                for e in es:
-                    print_info(i + 1, e.text)
-            except:
-                print_info(i + 1, es.text)
-                if i == 1 and es.text == '推出日期，敬請期待。':
-                    sg_email.send_email(es.text)
-        except Exception as e:
-            print(e)
+            iterator = iter(es)
+            for e in es:
+                print_info(i + 1, e.text)
+        except:
+            print_info(i + 1, es.text)
+            print(is_time_up)
+            if is_time_up and send_email:
+                email.set_email(subject="Feeds on %s"%(str(datetime.datetime.now())), content='Status: %s'%es.text)
+                email.send_email()
+                #sg_email.send_feed(datetime.datetime.now(), es.text)
+            if i == 1 and es.text == MONITORED_TEXT and send_email:
+                email.set_email(subject="Status has been updated!", content='Status: %s'%es.text)
+                email.send_email()
+                #sg_email.send_email(es.text)
+    except Exception as e:
+        print(e)
+
+def crawl(driver, duration=5):
+    i = 0
+    email = SendGridEmail(sender=SENDER_EMAIL, receiver=RECEIVER_EMAIL, subject="", content="")
+    while(True):
+        crwaler_helper(driver=driver, i=i, send_email=True, email=email)
         i += 1
         time.sleep(duration)
     driver.close()  
+

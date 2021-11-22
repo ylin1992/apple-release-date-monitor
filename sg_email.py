@@ -17,3 +17,17 @@ def send_email(text):
     except Exception as e:
         print(e.body)
 
+def send_feed(datetime, status):
+    message = Mail(
+        from_email=SENDER_EMAIL,
+        to_emails=RECEIVER_EMAIL,
+        subject='Feeds on %s'%datetime,
+        html_content='<strong>Check it out on the website!</strong><p>'+status+'</p>')
+    try:
+        sg = SendGridAPIClient(SENDGRID_API_KEY)
+        response = sg.send(message)
+        print(response.status_code)
+        print(response.body)
+        print(response.headers)
+    except Exception as e:
+        print(e.body)
