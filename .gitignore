@@ -1,0 +1,4 @@
+secret.sh
+/__pycache__/
+**/__pycache__/
+chromedriver
