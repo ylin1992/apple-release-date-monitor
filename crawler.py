@@ -15,7 +15,8 @@ is_checked          = False
 def feeds_timer():
     global START_TIME
     end_time = time.time()
-    elasped = (end_time - START_TIME) / 1000 / 60 / 60
+    elasped = (end_time - START_TIME)  / 60 / 60
+    print(elasped)
     if elasped > FEEDS_DURATION:
         START_TIME = time.time()
         return True
