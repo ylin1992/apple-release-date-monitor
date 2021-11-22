@@ -34,8 +34,8 @@ def crawl(driver, duration=5, iter_time=10):
                     print_info(i + 1, e.text)
             except:
                 print_info(i + 1, es.text)
-                # if es.text == '推出日期，敬請期待。':
-                #     sg_email.send_email()
+                if i == 1 and es.text == '推出日期，敬請期待。':
+                    sg_email.send_email(es.text)
         except Exception as e:
             print(e)
         i += 1
