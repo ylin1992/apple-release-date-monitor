@@ -20,8 +20,8 @@ def init_driver():
 
     return driver
 
-def crawl(driver, duration=5, time=10):
-    for i in range(time):
+def crawl(driver, duration=5, iter_time=10):
+    for i in range(iter_time):
         driver.get("https://www.apple.com/tw/macbook-pro/")
     es = driver.find_element_by_class_name('typography-body')
     try:
