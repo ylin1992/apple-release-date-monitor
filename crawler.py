@@ -22,21 +22,22 @@ def init_driver():
     return driver
 
 def crawl(driver, duration=5, iter_time=10):
+    i = 0
     while(True):
     # for i in range(iter_time):
         driver.get("https://www.apple.com/tw/macbook-pro/")
-    try:
-        es = driver.find_element_by_class_name('typography-body')
         try:
-            iterator = iter(es)
-            for e in es:
-                print_info(i + 1, e.text)
-        except:
-            print_info(i + 1, es.text)
-            # if es.text == '推出日期，敬請期待。':
-            #     sg_email.send_email()
-    except Exception as e:
-        print(e)
-        
-    time.sleep(duration)
+            es = driver.find_element_by_class_name('typography-body')
+            try:
+                iterator = iter(es)
+                for e in es:
+                    print_info(i + 1, e.text)
+            except:
+                print_info(i + 1, es.text)
+                # if es.text == '推出日期，敬請期待。':
+                #     sg_email.send_email()
+        except Exception as e:
+            print(e)
+        i += 1
+        time.sleep(duration)
     driver.close()  
