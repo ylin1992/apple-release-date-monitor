@@ -1,4 +1,4 @@
-# MacBook Pro Releasing Date Monitor
+# MacBook Pro Release Date Monitor
 - This project provides a web-crawler keeping searching the release date of 14-inch 2021 MacBook Pro in Taiwan.
 - A feed showing the current releasing status is updated to user via email in every two hours.
 - Once the status is changed, a notification email will be delivered to the user immediately.
