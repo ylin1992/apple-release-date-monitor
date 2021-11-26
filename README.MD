@@ -1,15 +1,15 @@
 # MacBook Pro Releasing Date Monitor
-This project provides a web-crawler keeping searching the release date of 14-inch 2021 MacBook Pro in Taiwan.
-A feed showing the current releasing status is updated to user via email in every two hours.
-Once the status is changed, a notification email will be delivered to the user immediately.
+- This project provides a web-crawler keeping searching the release date of 14-inch 2021 MacBook Pro in Taiwan.
+- A feed showing the current releasing status is updated to user via email in every two hours.
+- Once the status is changed, a notification email will be delivered to the user immediately.
 
 ## Hosting
 The project is hosted on Heroku, but user is also allowed to run it locally.
 
 ## Getting started
-**Python 3.6**: Install Python 3.6 by following the instructions from [Python website](https://www.python.org/downloads/)
-**Dependencies**: Install packages by ```pip3 install -r requirements.txt```
-**Setup up environment variables**: Go to ```setup.sh``` and fill in the required fields by the following instructions.
+1. **Python 3.6**: Install Python 3.6 by following the instructions from [Python website](https://www.python.org/downloads/)
+2. **Dependencies**: Install packages by ```pip3 install -r requirements.txt```
+3. **Setup up environment variables**: Go to ```setup.sh``` and fill in the required fields by the following instructions.
 - Run locally: 
     - If you are running the crawler locally, fill in ```SENDER_EMAIL``` (your sender email), ```SENDER_PWD``` (your sender password) and ```RECEIVER_EMAIL``` (account receving notifications). Email-sending feature is implemented by SSL if we run locally.
     - [Download a chromedriver](https://chromedriver.chromium.org/) and put it in the root directory
