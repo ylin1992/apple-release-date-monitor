@@ -14,7 +14,7 @@ The project is hosted on Heroku, but user is also allowed to run it locally.
     - If you are running the crawler locally, fill in ```SENDER_EMAIL``` (your sender email), ```SENDER_PWD``` (your sender password) and ```RECEIVER_EMAIL``` (account receving notifications). Email-sending feature is implemented by SSL if we run locally.
     - [Download a chromedriver](https://chromedriver.chromium.org/) and put it in the root directory
     ***Note***: Please make sure your are using the same driver version of google chrome installed in your computer.
-- Hosted on Heroku: Complete the instructions abovementioned and create a SendGrid account, filling your api key in the SENGRID_API_KEY field. For the rest part of the deployment, refer to [Deploy on Heroku section](Deploy-on-Heroku)
+- Hosted on Heroku: Complete the instructions abovementioned and create a [SendGrid](https://sendgrid.com/) account, filling your api key in the ```SENGRID_API_KEY``` field. For the rest part of the deployment, refer to [Deploy on Heroku section](Deploy-on-Heroku)
 
 ## Run the program
 ### Run locally
