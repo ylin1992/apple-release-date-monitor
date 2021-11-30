@@ -78,10 +78,10 @@ def crwaler_helper(is_time_up, driver, i=0, send_email=False, emails=None):
 
 def crawl(driver, duration=60):
     i = 0
-    emails = [SendGridEmail(sender=SENDER_EMAIL, receiver=r, subject="", content="") for r in reciever_emails_address]
     email = SendGridEmail(sender=SENDER_EMAIL, receiver=RECEIVER_EMAIL, subject="", content="")
     while(True):
         reciever_emails_address = email_fetcher.get_all_users()
+        emails = [SendGridEmail(sender=SENDER_EMAIL, receiver=r, subject="", content="") for r in reciever_emails_address]
         crwaler_helper(driver=driver, i=i, send_email=True, emails=emails)
         i += 1
         time.sleep(duration)
