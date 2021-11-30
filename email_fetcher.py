@@ -6,6 +6,7 @@ def get_all_users():
     if res.status_code == 200:
         users = res.json().get('users')
         emails = [u['email'] for u in users]
+        print(emails)
         return emails
     else:
         print("Error, status code: " + str(res.status_code))
