@@ -8,7 +8,7 @@ def get_all_users():
         print(e)
     if res.status_code == 200:
         users = res.json().get('users')
-        emails = [u['email'] for u in users]
+        emails = set([u['email'] for u in users])
         print(emails)
         return emails
     else:
