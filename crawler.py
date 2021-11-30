@@ -4,6 +4,7 @@ from config import RECEIVER_EMAIL, SENDER_EMAIL
 import os
 import datetime
 from emails import Email, SendGridEmail, SSLEmail
+import email_fetcher
 
 
 START_TIME          = time.time()
@@ -49,7 +50,7 @@ def init_driver():
     return driver
 
 @check_feeds
-def crwaler_helper(is_time_up, driver, i=0, send_email=False, email=None):
+def crwaler_helper(is_time_up, driver, i=0, send_email=False, emails=None):
     global is_checked
     driver.get(CRAWL_URL)
     try:
@@ -61,23 +62,27 @@ def crwaler_helper(is_time_up, driver, i=0, send_email=False, email=None):
         except:
             print_info(i + 1, es.text)
             print(is_time_up)
-            if is_time_up and send_email:
-                email.set_email(subject="Feeds on %s"%(str(datetime.datetime.now())), content='Status: %s'%es.text)
-                email.send_email()
-                #sg_email.send_feed(datetime.datetime.now(), es.text)
+            if is_time_up and send_email or i == 1:
+                for email in emails:
+                    email.set_email(subject="Feeds on %s"%(str(datetime.datetime.now())), content='Status: %s'%es.text)
+                    email.send_email()
+                    #sg_email.send_feed(datetime.datetime.now(), es.text)
             if not is_checked and es.text != MONITORED_TEXT and send_email :
                 is_checked = True
-                email.set_email(subject="Status has been updated!", content='Status: %s'%es.text)
-                email.send_email()
+                for email in emails:
+                    email.set_email(subject="Status has been updated!", content='Status: %s'%es.text)
+                    email.send_email()
                 #sg_email.send_email(es.text)
     except Exception as e:
         print(e)
 
 def crawl(driver, duration=60):
     i = 0
+    reciever_emails_address = email_fetcher.get_all_users()
+    emails = [SendGridEmail(sender=SENDER_EMAIL, receiver=r, subject="", content="") for r in reciever_emails_address]
     email = SendGridEmail(sender=SENDER_EMAIL, receiver=RECEIVER_EMAIL, subject="", content="")
     while(True):
-        crwaler_helper(driver=driver, i=i, send_email=True, email=email)
+        crwaler_helper(driver=driver, i=i, send_email=True, emails=emails)
         i += 1
         time.sleep(duration)
     driver.close()  
