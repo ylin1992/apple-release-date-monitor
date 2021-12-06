@@ -10,8 +10,9 @@ import email_fetcher
 START_TIME          = time.time()
 FEEDS_DURATION      = 2 # hours
 CRAWL_URL           = "https://www.apple.com/tw/macbook-pro/"
-TARGET_CLASS_NAME   = 'typography-body'
-MONITORED_TEXT      = '推出日期，敬請期待。'
+TARGET_CLASS_NAME   = 'bottom-intro'
+MONITORED_TEXT      = '購買'
+MONITORED_TITLE     = 'buy - macbook pro 14'
 is_checked          = False
 def feeds_timer():
     global START_TIME
@@ -54,20 +55,33 @@ def crwaler_helper(is_time_up, driver, i=0, send_email=False, emails=None):
     global is_checked
     driver.get(CRAWL_URL)
     try:
-        es = driver.find_element_by_class_name(TARGET_CLASS_NAME)
+        es = driver.find_elements_by_class_name(TARGET_CLASS_NAME)
+        print(es)
         try:
             iterator = iter(es)
             for e in es:
                 print_info(i + 1, e.text)
+                title = e.get_attribute("data-analytics-title")
+                if title is not None:
+                    print_info(i + 1, title)
+                    if is_time_up and send_email or i == 0:
+                        for email in emails:
+                            email.set_email(subject="Feeds on %s"%(str(datetime.datetime.now())), content='Status: %s'%title)
+                    if MONITORED_TITLE in title and not is_checked and send_email:
+                        is_checked = True
+                        for email in emails:
+                            email.set_email(subject="Status has been updated!", content='Status: %s'%title)
+                            email.send_email()
+
         except:
             print_info(i + 1, es.text)
             print(is_time_up)
             if is_time_up and send_email or i == 0:
                 for email in emails:
                     email.set_email(subject="Feeds on %s"%(str(datetime.datetime.now())), content='Status: %s'%es.text)
-                    email.send_email()
+                    # email.send_email()
                     #sg_email.send_feed(datetime.datetime.now(), es.text)
-            if not is_checked and es.text != MONITORED_TEXT and send_email or i == 0:
+            if not is_checked and MONITORED_TEXT not in es.text  and send_email or i == 0:
                 is_checked = True
                 for email in emails:
                     email.set_email(subject="Status has been updated!", content='Status: %s'%es.text)
