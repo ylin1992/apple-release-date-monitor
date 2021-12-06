@@ -62,15 +62,16 @@ def crwaler_helper(is_time_up, driver, i=0, send_email=False, emails=None):
             for e in es:
                 print_info(i + 1, e.text)
                 title = e.get_attribute("data-analytics-title")
+                if is_time_up and send_email or i == 0:
+                    for email in emails:
+                        email.set_email(subject="Feeds on %s"%(str(datetime.datetime.now())), content='Status: have not released')
+
                 if title is not None:
                     print_info(i + 1, title)
-                    if is_time_up and send_email or i == 0:
-                        for email in emails:
-                            email.set_email(subject="Feeds on %s"%(str(datetime.datetime.now())), content='Status: %s'%title)
                     if MONITORED_TITLE in title and not is_checked and send_email:
                         is_checked = True
                         for email in emails:
-                            email.set_email(subject="Status has been updated!", content='Status: %s'%title)
+                            email.set_email(subject="Status has been updated!", content='Status: Release! title: %s'%title)
                             email.send_email()
 
         except:
